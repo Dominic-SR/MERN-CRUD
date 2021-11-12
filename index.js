@@ -3,8 +3,13 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const cors = require("cors");
+const fileUpload = require('express-fileupload')
+const cors = require("cors"); 
+
 require('dotenv/config')
+
+//file-upload
+app.use(fileUpload())
 
 //Body-parser
 app.use(express.json());

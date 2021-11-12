@@ -1,16 +1,19 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const router = express.Router();
 const Category = require('../Schema/CategorySchema');
-var multer = require('multer');
+
 
 router.post('/category',async(req,res) => {
     try{
-        console.log(req.body.myfile);
-     
+       
+        var fu = req.files.image;
+        fu.mv('C:/Users/Dominic/Desktop/backup/project/MERN/fullfunctional/my-app/public/uploads/'+fu.name);
+        
         const postCatgory = await new Category({
             catgoryname:req.body.catgoryname,
             description:req.body.description,
-            image:req.body.image
+            image:fu.name
         });
         const saveCatgory = await postCatgory.save();
         res.status(200).json(saveCatgory);
@@ -42,11 +45,20 @@ router.get('/category/:id',async(req,res) => {
 
 router.put('/category/:id',async(req,res) => {
     try{
-    const updateCatgory = await Category.updateOne({_id:req.params.id},{$set:{catgoryname:req.body.catgoryname,description:req.body.description,image:req.body.image}})   
-    res.status(200).json(updateCatgory);
+   var filename = req.body.myfile;
+    if(filename === "undefined"){
+        const updateCatgory = await Category.updateOne({_id:req.body.id},{$set:{catgoryname:req.body.catgoryname,description:req.body.description}})   
+        res.status(200).json(updateCatgory);
+    }
+    else{
+        var fu = req.files.image;
+        fu.mv('C:/Users/Dominic/Desktop/backup/project/MERN/fullfunctional/my-app/public/uploads/'+fu.name);
+        const updateCatgory = await Category.updateOne({_id:req.body.id},{$set:{catgoryname:req.body.catgoryname,description:req.body.description,image:fu.name}})   
+        res.status(200).json(updateCatgory);
+    }
     }
     catch(err){
-        res.json({"err":err})
+    res.json({"err":err})
     }
 })
 

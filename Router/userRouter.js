@@ -30,6 +30,7 @@ router.post('/register',async (req,res) => {
 
 router.post('/login', async (req, res) => {
     try{
+        console.log(req.body)
           var userData = await User.findOne({email:req.body.email});
             if(!userData){
             return res.status(400).json("Email not exist");
@@ -52,6 +53,7 @@ const validUser = (req,res,next) => {
     var token = req.header('auth');
     req.token = token;
     next()
+    console.log("123");
 }
 
 router.get('/getAll',validUser, async(req,res) => {
